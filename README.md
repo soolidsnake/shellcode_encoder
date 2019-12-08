@@ -1,6 +1,6 @@
 # shellcode_encoder
 
-Python Tool / library is a SUB shellcode encoder that uses z3 to find the right valid instructions.
+Python Tool / library, shellcode_encoder is a SUB shellcode encoder that uses z3 to find the right valid instructions.
 
 ## Usage
 
