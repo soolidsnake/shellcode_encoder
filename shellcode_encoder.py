@@ -25,7 +25,7 @@ def constraints(solver, x, bad_chars):
 	return solver
 
 
-def encode_shellcode(esp_value='', address_shellcode='', bad_chars=[], shellcode='', scripting=False):
+def encode_shellcode(esp_value='', address_shellcode='', register='esp', bad_chars=[], shellcode='', scripting=False):
 	if not scripting:
 		bad_chars = parse_badchars()
 		shellcode = raw_input('Enter shellcode to encode: ')
@@ -66,7 +66,7 @@ def encode_shellcode(esp_value='', address_shellcode='', bad_chars=[], shellcode
 
 	solver.push()
 
-	enc_shellcode += "push esp;"
+	enc_shellcode += "push " + register + ";"
 	enc_shellcode += "pop eax;"
 
 	solver.pop()
