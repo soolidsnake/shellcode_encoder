@@ -15,9 +15,13 @@ Use the function "code_shellcode".
 
 #### Arguments:
 offset_r_address: the offset from the start register to the address of the shellcode
+
 register: the starting register(default: ESP)
+
 bad_chars: a list of bad chars
+
 shellcode: the shellcode to encode
+
 scripting: Shouldd be set to True
 
 Example:
