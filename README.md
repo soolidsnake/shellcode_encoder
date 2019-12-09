@@ -2,6 +2,12 @@
 
 Python Tool / library, shellcode_encoder is a SUB shellcode encoder that uses z3 to find the right valid instructions.
 
+## Installation of the required library
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Usage
 
 ### 0x00) As a python module:
