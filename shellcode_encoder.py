@@ -77,7 +77,7 @@ def encode_shellcode(address_shellcode='', bad_chars=[], shellcode='', scripting
 	solver.pop()
 	solver.push()
 
-	solver.add(address_shellcode == 0 - x - y - z)
+	solver.add(address_shellcode == 0 - x - y - z - a)
 
 	solver.check()
 	model = solver.model()
@@ -85,12 +85,13 @@ def encode_shellcode(address_shellcode='', bad_chars=[], shellcode='', scripting
 	enc_shellcode += "sub eax," + hex(int(str(model[x]))) + ";"
 	enc_shellcode += "sub eax," + hex(int(str(model[y]))) + ";"
 	enc_shellcode += "sub eax," + hex(int(str(model[z]))) + ";"
+	enc_shellcode += "sub eax," + hex(int(str(model[a]))) + ";"
 
 
 	solver.pop()
 	solver.push()
 
-	to_add = 5*5 + (4*5 + 2) + len(values)*21 + len(values)*4
+	to_add = 5*6 + (4*5 + 2) + len(values)*21 + len(values)*4
 
 	solver.add(address_shellcode + to_add == address_shellcode - x - y - z - a)
 
@@ -134,6 +135,8 @@ def encode_shellcode(address_shellcode='', bad_chars=[], shellcode='', scripting
 
 	log.success('Compiled assembly code')
 	print repr(asm(enc_shellcode))
+
+	return asm(enc_shellcode)
 
 
 if __name__ == '__main__':
