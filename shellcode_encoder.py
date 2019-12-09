@@ -25,12 +25,11 @@ def constraints(solver, x, bad_chars):
 	return solver
 
 
-def encode_shellcode(esp_value='', address_shellcode='', register='esp', bad_chars=[], shellcode='', scripting=False):
+def encode_shellcode(offset_r_address='', register='esp', bad_chars=[], shellcode='', scripting=False):
 	if not scripting:
 		bad_chars = parse_badchars()
 		shellcode = raw_input('Enter shellcode to encode: ')
-		esp_value = int(raw_input('Enter value of esp in hex format: ').strip(), 16)
-		address_shellcode = int(raw_input('Enter address of shellcode in hex format: ').strip(), 16)
+		offset_r_address = int(raw_input('Enter the offset between the register specified to the start address of the shellcode in hex format: ').strip(), 16)
 	else:
 		shellcode = hexlify(shellcode)
 
@@ -73,13 +72,11 @@ def encode_shellcode(esp_value='', address_shellcode='', register='esp', bad_cha
 	solver.push()
 
 	# Calculate difference between esp and shellcode address
-	to_add = address_shellcode - esp_value
+	to_add = offset_r_address
 	# Calculate the number of bytes required to jump to the end of the encoded shellcode from the shellcode address
-	to_add += 1*2 + (4*5 + 2) + len(values)*21 + len(values)*4
+	to_add += 1*2 + (4*5 + 2) + 5*2 + len(values)*21 + len(values)*4
 
-	solver.add(esp_value + to_add == esp_value - x - y - z - a)
-
-	eax = esp_value + to_add
+	solver.add(to_add == 0 - x - y - z - a)
 
 	solver.check()
 	model = solver.model()
@@ -90,6 +87,20 @@ def encode_shellcode(esp_value='', address_shellcode='', register='esp', bad_cha
 	enc_shellcode += "sub eax," + hex(int(str(model[a]))) + ";"
 	enc_shellcode += "push eax" + ";"
 	enc_shellcode += "pop esp" + ";"
+
+
+	eax = 0
+	solver.pop()
+	solver.push()
+
+
+	solver.add(0 == x&y)
+
+	solver.check()
+	model = solver.model()
+
+	enc_shellcode += "and eax," + hex(int(str(model[x]))) + ";"
+	enc_shellcode += "and eax," + hex(int(str(model[y]))) + ";"
 
 
 	for val in values:

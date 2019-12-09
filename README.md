@@ -11,17 +11,18 @@ pip install -r requirements.txt
 ## Usage
 
 ### 0x00) As a python module:
-Use the function "code_shellcode", the first argment should be the content of ESP.
+Use the function "code_shellcode".
 
-second argument is the address of where the shellcode is stored in memory
-
-The third argument is a list of bad characters.
-
-The forth argument is the shellcode.
+#### Arguments:
+offset_r_address: the offset from the start register to the address of the shellcode
+register: the starting register(default: ESP)
+bad_chars: a list of bad chars
+shellcode: the shellcode to encode
+scripting: Shouldd be set to True
 
 Example:
 ```python
-encoded_shellcode = encode_shellcode(esp_value=0x0018800C, address_shellcode=0x00188C8B, bad_chars=[], shellcode=msgbox, scripting=True)
+encoded_shellcode = encode_shellcode(offset_r_address=0xc7f, register='esp', bad_chars=[], shellcode="\x41\x42\x43\x44", scripting=True)
 ```
 
 
