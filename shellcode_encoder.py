@@ -28,7 +28,8 @@ def constraints(solver, x, bad_chars):
 def encode_shellcode(offset_r_address='', register='esp', bad_chars=[], shellcode='', scripting=False):
 	if not scripting:
 		bad_chars = parse_badchars()
-		shellcode = raw_input('Enter shellcode to encode: ')
+		shellcode = raw_input('Enter shellcode to encode: ').strip()
+		register = raw_input('Enter start register: ').strip()
 		offset_r_address = int(raw_input('Enter the offset between the register specified to the start address of the shellcode in hex format: ').strip(), 16)
 	else:
 		shellcode = hexlify(shellcode)
