@@ -25,10 +25,11 @@ def constraints(solver, x, bad_chars):
 	return solver
 
 
-def encode_shellcode(address_shellcode='', bad_chars=[], shellcode='', scripting=False):
+def encode_shellcode(esp_value='', address_shellcode='', bad_chars=[], shellcode='', scripting=False):
 	if not scripting:
 		bad_chars = parse_badchars()
 		shellcode = raw_input('Enter shellcode to encode: ')
+		esp_value = int(raw_input('Enter value of esp in hex format: ').strip(), 16)
 		address_shellcode = int(raw_input('Enter address of shellcode in hex format: ').strip(), 16)
 	else:
 		shellcode = hexlify(shellcode)
@@ -65,37 +66,20 @@ def encode_shellcode(address_shellcode='', bad_chars=[], shellcode='', scripting
 
 	solver.push()
 
-	solver.add(0 == x&y)
-	solver.check()
-	model = solver.model()
-	# mov eax, 0
-	enc_shellcode += "and eax," + hex(int(str(model[x]))) + ";"
-	enc_shellcode += "and eax," + hex(int(str(model[y]))) + ";"
-
-
-	# restore context of the solver
-	solver.pop()
-	solver.push()
-
-	solver.add(address_shellcode == 0 - x - y - z - a)
-
-	solver.check()
-	model = solver.model()
-	# mov eax, address_shellcode
-	enc_shellcode += "sub eax," + hex(int(str(model[x]))) + ";"
-	enc_shellcode += "sub eax," + hex(int(str(model[y]))) + ";"
-	enc_shellcode += "sub eax," + hex(int(str(model[z]))) + ";"
-	enc_shellcode += "sub eax," + hex(int(str(model[a]))) + ";"
-
+	enc_shellcode += "push esp;"
+	enc_shellcode += "pop eax;"
 
 	solver.pop()
 	solver.push()
 
-	to_add = 5*6 + (4*5 + 2) + len(values)*21 + len(values)*4
+	# Calculate difference between esp and shellcode address
+	to_add = address_shellcode - esp_value
+	# Calculate the number of bytes required to jump to the end of the encoded shellcode from the shellcode address
+	to_add += 1*2 + (4*5 + 2) + len(values)*21 + len(values)*4
 
-	solver.add(address_shellcode + to_add == address_shellcode - x - y - z - a)
+	solver.add(esp_value + to_add == esp_value - x - y - z - a)
 
-	eax = address_shellcode + to_add
+	eax = esp_value + to_add
 
 	solver.check()
 	model = solver.model()
