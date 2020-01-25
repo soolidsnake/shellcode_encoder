@@ -14,7 +14,8 @@ pip install -r requirements.txt
 Use the function **code_shellcode**.
 
 #### Arguments:
-**offset_r_address:** the offset from the start register(example esp) to the address of the shellcode
+**offset_r_address:** the offset from the start register(example esp) to the address of the shellcode.
+For the encoder to work, it must know the address of it's location. To do so, we can use for example **esp** as a reference and calculate the difference between where **esp** points to and the address of the input.
 
 **register:** the starting register(default: ESP)
 
