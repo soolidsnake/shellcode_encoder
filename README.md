@@ -11,7 +11,7 @@ pip install -r requirements.txt
 ## Usage
 
 ### 0x00) As a python module:
-Use the function "code_shellcode".
+Use the function **code_shellcode**.
 
 #### Arguments:
 **offset_r_address:** the offset from the start register(example esp) to the address of the shellcode
